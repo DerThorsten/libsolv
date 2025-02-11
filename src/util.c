@@ -164,13 +164,7 @@ solv_setcloexec(int fd, int state)
 void
 solv_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *compard)
 {
-# if defined(HAVE_QSORT_R)
   qsort_r(base, nmemb, size, compar, compard);
-# else
-  /* backported for SLE10-SP2 */
-  __qsort_r(base, nmemb, size, compar, compard);
-# endif
-
 }
 
 #elif defined(HAVE_QSORT_R) /* not glibc, but has qsort_r() */
