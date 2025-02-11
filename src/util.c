@@ -154,46 +154,46 @@ solv_setcloexec(int fd, int state)
   #endif
 }
 
-/* bsd's qsort_r has different arguments, so we define our
-   own version in case we need to do some clever mapping
+// /* bsd's qsort_r has different arguments, so we define our
+//    own version in case we need to do some clever mapping
 
-   see also: http://sources.redhat.com/ml/libc-alpha/2008-12/msg00003.html
- */
-#if (defined(__GLIBC__) || defined(__NEWLIB__)) && (defined(HAVE_QSORT_R) || defined(HAVE___QSORT_R))
+//    see also: http://sources.redhat.com/ml/libc-alpha/2008-12/msg00003.html
+//  */
+// #if (defined(__GLIBC__) || defined(__NEWLIB__)) && (defined(HAVE_QSORT_R) || defined(HAVE___QSORT_R))
 
-void
-solv_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *compard)
-{
-  qsort_r(base, nmemb, size, compar, compard);
-}
+// void
+// solv_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *compard)
+// {
+//   qsort_r(base, nmemb, size, compar, compard);
+// }
 
-#elif defined(HAVE_QSORT_R) /* not glibc, but has qsort_r() */
+// #elif defined(HAVE_QSORT_R) /* not glibc, but has qsort_r() */
 
-struct solv_sort_data {
-  int (*compar)(const void *, const void *, void *);
-  void *compard;
-};
+// struct solv_sort_data {
+//   int (*compar)(const void *, const void *, void *);
+//   void *compard;
+// };
 
-static int
-solv_sort_helper(void *compard, const void *a, const void *b)
-{
-  struct solv_sort_data *d = compard;
-  return (*d->compar)(a, b, d->compard);
-}
+// static int
+// solv_sort_helper(void *compard, const void *a, const void *b)
+// {
+//   struct solv_sort_data *d = compard;
+//   return (*d->compar)(a, b, d->compard);
+// }
 
-void
-solv_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *compard)
-{
-  struct solv_sort_data d;
-  d.compar = compar;
-  d.compard = compard;
-  qsort_r(base, nmemb, size, &d, solv_sort_helper);
-}
+// void
+// solv_sort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *compard)
+// {
+//   struct solv_sort_data d;
+//   d.compar = compar;
+//   d.compard = compard;
+//   qsort_r(base, nmemb, size, &d, solv_sort_helper);
+// }
 
-#else /* not glibc and no qsort_r() */
-/* use own version of qsort if none available */
+// #else /* not glibc and no qsort_r() */
+// /* use own version of qsort if none available */
 #include "qsort_r.c"
-#endif
+// #endif
 
 char *
 solv_dupjoin(const char *str1, const char *str2, const char *str3)
